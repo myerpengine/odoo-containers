@@ -135,9 +135,9 @@ RUN yum -y install wget yum-utils && \
     echo "install less" && \
     npm install -g less less-plugin-clean-css && \
 
-    # generate password for rootg
+    # generate password for root
     # (must do this or ssh will refuse to login)
-    echo root:`pwgen -cnsN 1 12` | chpasswd # will be reset in container && \
+    echo root:`pwgen -cnsN 1 12` | chpasswd && \
 
     # ssh service
     # (it's necessary to disable pam)
@@ -145,17 +145,16 @@ RUN yum -y install wget yum-utils && \
     sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config && \
     # (not really necessary but speeds up login)
     sed -i "s/\#UseDNS yes/UseDNS no/" /etc/ssh/sshd_config && \
-    sed -i "s/GSSAPIAuthentication yes/GSSAPIAuthentication no/" /etc/ssh/sshd_config && \
-
-    # user
-    adduser user && \
-    echo user:`pwgen -cnsN 1 12` | chpasswd # will be reset in container
+    sed -i "s/GSSAPIAuthentication yes/GSSAPIAuthentication no/" /etc/ssh/sshd_config
     
 ENV ODOO_VERSION 9.0
     
-RUN su user -c "mkdir -p /home/user/odoo" && \
-    su user -c "git clone https://github.com/myerpengine/odoo.git /home/user/odoo/odoo -b $ODOO_VERSION"
-    su user -c "git clone https://github.com/myerpengine/additionalodooaddons.git /home/user/odoo/other_addons -b $ODOO_VERSION"
+RUN adduser user && \
+    echo user:`pwgen -cnsN 1 12` | chpasswd && \
+    su user -c "mkdir -p /home/user/odoo" && \
+    su user -c "git clone https://github.com/myerpengine/odoo.git /home/user/odoo/odoo -b $ODOO_VERSION" && \
+    su user -c "git clone https://github.com/myerpengine/additionalodooaddons.git /home/user/odoo/other_addons -b $ODOO_VERSION" && \
+    su user -c "/usr/local/bin/virtualenv --system-site-packages /home/user/virtualenv"
     
 ADD supervisord.conf /etc/supervisord.conf
 ADD entrypoint.sh /entrypoint.sh
