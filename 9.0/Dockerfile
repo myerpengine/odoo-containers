@@ -158,7 +158,11 @@ RUN adduser user && \
     
 ADD supervisord.conf /etc/supervisord.conf
 ADD entrypoint.sh /entrypoint.sh
+ADD odoo_config.ini /home/user/odoo_config.ini
+RUN chown user:user /home/user/odoo_config.ini
+ADD launch_app.sh /home/user/launch_app.sh
+RUN chown user:user /home/user/launch_app.sh
 
-EXPOSE 22
+EXPOSE 22 8069 8072
 VOLUME ["/home/user", "/tmp", "/var/tmp"]
 CMD ["/entrypoint.sh", "supervisord"]
