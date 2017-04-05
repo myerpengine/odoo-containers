@@ -154,7 +154,8 @@ RUN adduser user && \
     su user -c "mkdir -p /home/user/odoo" && \
     su user -c "git clone https://github.com/myerpengine/odoo.git /home/user/odoo/odoo -b $ODOO_VERSION" && \
     su user -c "git clone https://github.com/myerpengine/additionalodooaddons.git /home/user/odoo/other_addons -b $ODOO_VERSION" && \
-    su user -c "/usr/local/bin/virtualenv --system-site-packages /home/user/virtualenv"
+    su user -c "/usr/local/bin/virtualenv --system-site-packages /home/user/virtualenv" && \
+    mkdir /overrides
     
 ADD supervisord.conf /etc/supervisord.conf
 ADD entrypoint.sh /entrypoint.sh

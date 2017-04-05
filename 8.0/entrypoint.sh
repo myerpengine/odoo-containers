@@ -20,6 +20,8 @@ if [ ! -f /inited ]; then
     echo "Resetting password of user"
     echo user:`pwgen -cnsN 1 12` | chpasswd
     
+    su user -c "cp -r /overrides/* /home/user/"
+    
     touch /inited
 fi
 
