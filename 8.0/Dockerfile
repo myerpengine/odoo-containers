@@ -151,6 +151,12 @@ RUN yum -y install wget yum-utils && \
     adduser user && \
     echo user:`pwgen -cnsN 1 12` | chpasswd # will be reset in container
     
+ENV ODOO_VERSION 8.0
+    
+RUN su user -c "mkdir -p /home/user/odoo" && \
+    su user -c "git clone https://github.com/myerpengine/odoo.git /home/user/odoo/odoo -b $ODOO_VERSION"
+    su user -c "git clone https://github.com/myerpengine/additionalodooaddons.git /home/user/odoo/other_addons -b $ODOO_VERSION"
+    
 ADD supervisord.conf /etc/supervisord.conf
 ADD entrypoint.sh /entrypoint.sh
 
