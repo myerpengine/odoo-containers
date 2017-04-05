@@ -16,13 +16,13 @@ if [ ! -f /inited ]; then
     echo "Resetting password of user"
     echo user:`pwgen -cnsN 1 12` | chpasswd
     
-    # for legacy purpose
-    if test ! -e /home/user/virtualenv; then
-        su user -c "/usr/local/bin/virtualenv --system-site-packages /home/user/virtualenv"
-    fi
-    
     touch /inited
 
+fi
+
+# for legacy purpose
+if test ! -e /home/user/virtualenv; then
+    su user -c "/usr/local/bin/virtualenv --system-site-packages /home/user/virtualenv"
 fi
 
 exec "$@"
