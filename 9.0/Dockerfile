@@ -135,7 +135,7 @@ RUN yum -y install wget yum-utils && \
     echo "install less" && \
     npm install -g less less-plugin-clean-css && \
 
-    # generate password for root
+    # generate password for rootg
     # (must do this or ssh will refuse to login)
     echo root:`pwgen -cnsN 1 12` | chpasswd # will be reset in container && \
 
@@ -152,8 +152,8 @@ RUN yum -y install wget yum-utils && \
     echo user:`pwgen -cnsN 1 12` | chpasswd # will be reset in container
     
 ADD supervisord.conf /etc/supervisord.conf
-ADD init_container.sh /root/init_container.sh
+ADD entrypoint.sh /entrypoint.sh
 
 EXPOSE 22
 VOLUME ["/home/user", "/tmp", "/var/tmp"]
-CMD ["/root/init_container.sh"]
+CMD ["/entrypoint.sh", "supervisord"]
